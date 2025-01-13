@@ -14,7 +14,7 @@ QT is required to build the project
 
 Add the following environment variables (pointing to the corresponding folders):
 
-* QT_64_MSVC2017
+* QT_MSVC_64
 
 After that, for Visual Studio 2022 run the cmak_build.bat and now the solution can be oppened in the build folder.
 
