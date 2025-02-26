@@ -20,6 +20,7 @@ function(windeployqt target)
                 --no-opengl-sw
                 --no-compiler-runtime
                 --no-system-d3d-compiler
+				--no-translations
                 \"$<TARGET_FILE:${target}>\"
         COMMENT "Deploying Qt libraries using windeployqt for compilation target '${target}' ..."
     )

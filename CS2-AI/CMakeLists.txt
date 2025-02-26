@@ -99,6 +99,9 @@ source_group("\\Header Files\\CS2" FILES ${CS2_HEADER})
 source_group("\\Source Files\\Utility" FILES ${UTILITY_SOURCE})
 source_group("\\Source Files\\UI" FILES ${UI_SOURCE})
 source_group("\\Source Files\\CS2" FILES ${CS2_SOURCE})
+source_group("\\Source Files" FILES "src/main.cpp")
+# Put all other files via regex into the "Other" folder, mainly so that the solution doesn't get cluttered by Qt generated files
+source_group("Other" REGULAR_EXPRESSION "\\.h$|\\.cpp$|\\.stamp$|\\.rule$")
 
 
 add_executable(CS2_AI "src/main.cpp" ${SOURCES} ${HEADERS} ${QT_UI_FILES})
@@ -123,4 +126,3 @@ if	(MSVC)
 	target_compile_options(CS2_AI PRIVATE "/MP")
 	windeployqt(CS2_AI)
 endif (MSVC)
-
