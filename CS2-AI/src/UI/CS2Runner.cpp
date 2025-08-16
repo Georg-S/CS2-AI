@@ -1,10 +1,11 @@
 #include "UI/CS2Runner.h"
 
-CS2Runner::CS2Runner(): QObject(nullptr)
+CS2Runner::CS2Runner(Config config)
+	: QObject(nullptr)
 {
 	m_cs2_ai_handler = std::make_unique<CS2Ai>();
 	m_cs2_navmesh_points_handler = std::make_unique<NavmeshPoints>(m_cs2_ai_handler->get_game_info_handler());
-	load_config();
+	set_config(std::move(config));
 	load_offsets();
 	attach_to_process();
 }
@@ -57,10 +58,10 @@ void CS2Runner::add_point()
 	m_cs2_navmesh_points_handler->add_point();
 }
 
-void CS2Runner::load_config()
+void CS2Runner::set_config(Config config) 
 {
 	std::scoped_lock lock(m_mutex);
-	m_cs2_ai_handler->load_config();
+	m_cs2_ai_handler->set_config(std::move(config));
 }
 
 void CS2Runner::load_offsets()

@@ -3,6 +3,8 @@
 MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), m_ui(new Ui::MainWindow)
 {
 	m_ui->setupUi(this);
+	m_settings_window = new SettingsWindow(this);
+	auto cs2_config = m_settings_window->get_config();
 
 	m_box_logger = std::make_unique<QTBoxLogger>(
 		std::initializer_list<QTextEdit*>({ m_ui->textEdit_output, m_ui->textEdit_point_output }));
@@ -13,7 +15,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), m_ui(new Ui::Main
 	m_log_updater->start();
 
 	m_cs2_runner_thread = new QThread();
-	m_cs2_runner = new CS2Runner();
+	m_cs2_runner = new CS2Runner(cs2_config);
 	m_cs2_runner->moveToThread(m_cs2_runner_thread);
 
 	m_ui->editor_tab_layout->addWidget(new NavmeshEditorWidget(m_cs2_runner, this));
@@ -22,11 +24,13 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent), m_ui(new Ui::Main
 	connect(m_cs2_runner, &CS2Runner::finished, m_cs2_runner_thread, &QThread::quit);
 	connect(m_cs2_runner, &CS2Runner::finished, m_cs2_runner, &CS2Runner::deleteLater);
 	connect(m_cs2_runner_thread, &QThread::finished, m_cs2_runner_thread, &QThread::deleteLater);
+	connect(m_ui->actionSettings, &QAction::triggered, this, &MainWindow::open_setting_window);
 	m_cs2_runner_thread->start();
 }
 
 MainWindow::~MainWindow()
 {
+	m_settings_window->save_to_file();
 	delete m_log_updater;
 	delete m_ui;
 }
@@ -75,6 +79,13 @@ void MainWindow::set_enabled(bool value, std::initializer_list<QCheckBox*> check
 		box->setEnabled(value);
 }
 
+void MainWindow::open_setting_window()
+{
+	m_settings_window->exec();
+	m_settings_window->save_to_file();
+	m_cs2_runner->set_config(m_settings_window->get_config());
+}
+
 void MainWindow::on_checkBox_ai_stateChanged()
 {
 	if (all_behavior_checkboxes_checked() && m_ui->checkBox_ai->isChecked())
@@ -121,7 +132,7 @@ void MainWindow::on_checkBox_triggerbot_stateChanged()
 
 void MainWindow::on_button_reload_files_clicked()
 {
-	m_cs2_runner->load_config();
+	m_cs2_runner->set_config(m_settings_window->get_config());
 	m_cs2_runner->load_offsets();
 	m_cs2_runner->load_navmesh();
 }

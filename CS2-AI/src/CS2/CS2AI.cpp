@@ -20,17 +20,13 @@ void CS2Ai::update()
 		m_movement_strategy.update(m_game_info_handler.get());
 }
 
-bool CS2Ai::load_config()
+void CS2Ai::set_config(Config config) 
 {
-	auto readConfig = Config::read_in_config_data();
-	if (!readConfig)
-	{
-		Logging::log_error("Config couldn't be read, make sure you have a valid config");
-		return false;
-	}
-	m_config = readConfig.value();
-
-	return true;
+	m_config = std::move(config);
+	m_triggerbot.set_shoot_at_teammates(!m_config.ignore_same_team);
+	m_triggerbot.set_time_between_shots(m_config.delay_between_shots);
+	m_movement_strategy.set_only_stop_for_enemies(m_config.ignore_same_team);
+	m_game_info_handler->set_config(m_config);
 }
 
 bool CS2Ai::load_offsets()

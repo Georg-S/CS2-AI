@@ -6,7 +6,7 @@
 #include "Utility/Vec3D.h"
 #include "Utility/Vec2D.h"
 #include "MemoryManager.h"
-#include "ConfigReader.h"
+#include "Config.h"
 
 struct Movement
 {
@@ -41,7 +41,7 @@ struct GameInformation
 	ControlledPlayer controlled_player;
 	std::vector<PlayerInformation> other_players;
 	std::optional<PlayerInformation> player_in_crosshair;
-	std::optional<PlayerInformation> closest_enemy_player;
+	std::optional<PlayerInformation> closest_target_player; // Can be in the same team, or enemy team only
 	char current_map[64] = "";
 };
 
@@ -58,6 +58,7 @@ public:
 	void set_view_vec(const Vec2D<float>& view_vec);
 	void set_player_movement(const Movement& movement);
 	void set_player_shooting(bool val);
+	void set_config(Config config);
 
 private:
 	ControlledPlayer read_controlled_player_information(uintptr_t player_address);
@@ -68,7 +69,7 @@ private:
 	uintptr_t get_entity_controller_or_pawn(uintptr_t list_entity, uintptr_t id);
 	std::optional<PlayerInformation> read_player(uintptr_t entity_list_begin, uintptr_t id, uintptr_t player_address);
 	std::optional<PlayerInformation> read_player_in_crosshair(uintptr_t player_controller, uintptr_t player_pawn);
-	std::optional<PlayerInformation> get_closest_enemy(const GameInformation& game_info);
+	std::optional<PlayerInformation> get_closest_player(const GameInformation& game_info, bool only_enemy_team);
 	void read_in_current_map(char* buffer, size_t buffer_size);
 	bool read_in_if_controlled_player_is_shooting();
 

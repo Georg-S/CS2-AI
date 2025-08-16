@@ -6,6 +6,7 @@
 #include <qthread.h>
 #include <iostream>
 #include <memory>
+#include "CS2/Config.h"
 #include "CS2/CS2AI.h"
 #include "CS2/NavmeshPoints.h"
 
@@ -19,13 +20,13 @@ class CS2Runner : public QObject
     Q_OBJECT
 
 public:
-    CS2Runner();
+    CS2Runner(Config config);
     void update();
     void set_mode(ModeRunning mode);
     void set_add_point_key(int key_code);
     bool save_navmesh_points();
     void add_point();
-    void load_config();
+    void set_config(Config config);
     void load_offsets();
     void load_navmesh();
     void attach_to_process();

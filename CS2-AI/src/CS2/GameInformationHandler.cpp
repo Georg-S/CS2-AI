@@ -33,7 +33,7 @@ void GameInformationhandler::update_game_information()
 	m_game_information.controlled_player = read_controlled_player_information(player_controller_address);
 	m_game_information.player_in_crosshair = read_player_in_crosshair(player_controller_address, player_pawn_address);
 	m_game_information.other_players = read_other_players(player_controller_address);
-	m_game_information.closest_enemy_player = get_closest_enemy(m_game_information);
+	m_game_information.closest_target_player = get_closest_player(m_game_information, m_config.ignore_same_team);
 	read_in_current_map(m_game_information.current_map, std::size(m_game_information.current_map));
 }
 
@@ -95,7 +95,12 @@ void GameInformationhandler::set_player_shooting(bool val)
 	m_process_memory.write_memory<DWORD>(m_client_dll_address + m_offsets.force_attack, mem_val);
 }
 
-std::optional<PlayerInformation> GameInformationhandler::get_closest_enemy(const GameInformation& game_info)
+void GameInformationhandler::set_config(Config config)
+{
+	m_config = std::move(config);
+}
+
+std::optional<PlayerInformation> GameInformationhandler::get_closest_player(const GameInformation& game_info, bool only_enemy_team)
 {
 	std::optional<PlayerInformation> closest_enemy = {};
 	const auto& controlled_player = game_info.controlled_player;
@@ -103,9 +108,11 @@ std::optional<PlayerInformation> GameInformationhandler::get_closest_enemy(const
 
 	for (const auto& enemy : game_info.other_players)
 	{
-		float distance = controlled_player.head_position.distance(enemy.head_position);
+		if (only_enemy_team && (enemy.team == controlled_player.team))
+			continue;
 
-		if ((distance <= closest_distance) && (enemy.team != controlled_player.team) && (enemy.health > 0))
+		float distance = controlled_player.head_position.distance(enemy.head_position);
+		if ((distance <= closest_distance) && (enemy.health > 0))
 		{
 			closest_distance = distance;
 			closest_enemy = enemy;

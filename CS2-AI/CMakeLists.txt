@@ -28,17 +28,19 @@ set (UI_HEADER
 	"include/UI/NavmeshEditor.h"
 	"include/UI/NavmeshEditorWidget.h"
 	"include/UI/QTBoxLogger.h"
+	"include/UI/SettingsWindow.h"
 )
 
 set(QT_UI_FILES
 	"include/UI/MainWindow.ui"
 	"include/UI/NavmeshEditorWidget.ui"
+	"include/UI/SettingsWidget.ui"
 )
 
 set (CS2_HEADER
 	"include/CS2/Aimbot.h"
 	"include/CS2/Button.h"
-	"include/CS2/ConfigReader.h"
+	"include/CS2/Config.h"
 	"include/CS2/CS2AI.h"
 	"include/CS2/GameInformationHandler.h"
 	"include/CS2/MemoryManager.h"
@@ -58,7 +60,6 @@ set (HEADERS
 set(CS2_SOURCE
 	"src/CS2/Aimbot.cpp"
 	"src/CS2/Button.cpp"
-	"src/CS2/ConfigReader.cpp"
 	"src/CS2/CS2AI.cpp"
 	"src/CS2/GameInformationHandler.cpp"
 	"src/CS2/MemoryManager.cpp"
@@ -74,6 +75,7 @@ set(UI_SOURCE
 	"src/UI/NavmeshEditor.cpp"
 	"src/UI/NavmeshEditorWidget.cpp"
 	"src/UI/QTBoxLogger.cpp"
+	"src/UI/SettingsWindow.cpp"
 )
 
 set(UTILITY_SOURCE

@@ -6,7 +6,7 @@
 #include "Offsets.h"
 #include "MemoryManager.h"
 #include "Utility/Vec3D.h"
-#include "ConfigReader.h"
+#include "Config.h"
 #include "Utility/json.hpp"
 #include "GameInformationHandler.h"
 #include "Utility/Logging.h"

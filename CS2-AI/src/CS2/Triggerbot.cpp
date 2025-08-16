@@ -13,7 +13,7 @@ void Triggerbot::update(GameInformationhandler* handler)
 	if (!game_info.player_in_crosshair)
 		return;
 
-	if (game_info.player_in_crosshair->team == game_info.controlled_player.team)
+	if (!m_shoot_at_teammates && (game_info.player_in_crosshair->team == game_info.controlled_player.team))
 		return;
 
 	if ((game_info.player_in_crosshair->health <= 0) || (game_info.player_in_crosshair->health >=200))
@@ -21,10 +21,19 @@ void Triggerbot::update(GameInformationhandler* handler)
 
 	const auto current_time_ms = get_current_time_in_ms();
 	
-	constexpr int delay_in_ms = 500;
 	if (current_time_ms >= m_delay_time)
 	{
-		m_delay_time = current_time_ms + delay_in_ms;
+		m_delay_time = current_time_ms + m_time_between_shots;
 		handler->set_player_shooting(true);
 	}
+}
+
+void Triggerbot::set_shoot_at_teammates(bool shoot_at_teammates)
+{
+	m_shoot_at_teammates = shoot_at_teammates;
+}
+
+void Triggerbot::set_time_between_shots(int milliseconds)
+{
+	m_time_between_shots = milliseconds;
 }

@@ -23,6 +23,7 @@ public:
 	void set_debug_print_route(bool value);
 	void reset_loaded_navmesh();
 	bool is_valid_navmesh_loaded() const;
+	void set_only_stop_for_enemies(bool only_enemies);
 
 private:
 	std::shared_ptr<Node> get_node_by_id(int id) const;
@@ -42,4 +43,5 @@ private:
 	bool m_valid_navmesh_loaded;
 	long long m_delay_time = 0;
 	bool m_debug_print_route = false;
+	bool m_only_enemies = true;
 };

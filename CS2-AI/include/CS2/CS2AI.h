@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 #include "Offsets.h"
-#include "ConfigReader.h"
+#include "Config.h"
 #include "GameInformationHandler.h"
 #include "Triggerbot.h"
 #include "Aimbot.h"
@@ -24,7 +24,7 @@ class CS2Ai
 public:
 	CS2Ai();
 	void update();
-	bool load_config();
+	void set_config(Config config);
 	bool load_offsets();
 	bool load_navmesh();
 	bool attach_to_cs2_process();

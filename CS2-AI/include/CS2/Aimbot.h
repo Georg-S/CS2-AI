@@ -9,4 +9,5 @@ public:
 
 private:
 	Vec2D<float> calc_view_vec_aim_to_head(const Vec3D<float>& player_head, const Vec3D<float>& enemy_head);
+	bool m_aim_at_teammates = false;
 };

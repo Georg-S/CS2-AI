@@ -10,7 +10,7 @@ void MovementStrategy::update(GameInformationhandler* game_info_handler)
 	if (!m_valid_navmesh_loaded)
 		return;
 
-	if (!game_info.closest_enemy_player || !game_info.controlled_player.health)
+	if (!game_info.closest_target_player || !game_info.controlled_player.health)
 	{
 		m_next_node = nullptr;
 		// Add delay here, because it can happen that the health is not zero anymore but the new position is not yet set
@@ -25,12 +25,15 @@ void MovementStrategy::update(GameInformationhandler* game_info_handler)
 		return;
 	}
 
-	if (game_info.player_in_crosshair && (game_info.player_in_crosshair->team != game_info.controlled_player.team))
+	if (game_info.player_in_crosshair) 
 	{
-		constexpr int delay_in_ms = 500;
-		game_info_handler->set_player_movement(Movement{});
-		m_delay_time = current_time_ms + delay_in_ms;
-		return;
+		if (!m_only_enemies || (game_info.player_in_crosshair->team != game_info.controlled_player.team)) 
+		{
+			constexpr int delay_in_ms = 500;
+			game_info_handler->set_player_movement(Movement{});
+			m_delay_time = current_time_ms + delay_in_ms;
+			return;
+		}
 	}
 
 	const Vec3D<float> player_pos = game_info.controlled_player.position;
@@ -41,7 +44,7 @@ void MovementStrategy::update(GameInformationhandler* game_info_handler)
 	auto distance = m_next_node->position.distance(player_pos);
 	if (distance <= 15)
 	{
-		auto current_closest_enemy_node = get_closest_node_to_position(game_info.closest_enemy_player->position);
+		auto current_closest_enemy_node = get_closest_node_to_position(game_info.closest_target_player->position);
 		m_current_route = Dijkstra::get_route(m_next_node, current_closest_enemy_node);
 		if (m_current_route.size() > 1)
 			m_next_node = m_current_route[1];
@@ -115,9 +118,14 @@ bool MovementStrategy::is_valid_navmesh_loaded() const
 	return m_valid_navmesh_loaded;
 }
 
+void MovementStrategy::set_only_stop_for_enemies(bool only_enemies)
+{
+	m_only_enemies = only_enemies;
+}
+
 Movement MovementStrategy::calculate_move_info(const GameInformation& game_info, const std::shared_ptr<Node> node)
 {
-	if (!game_info.closest_enemy_player)
+	if (!game_info.closest_target_player)
 		return Movement{};
 
 	float position_angle = calc_angle_between_two_positions(game_info.controlled_player.head_position, node->position);
