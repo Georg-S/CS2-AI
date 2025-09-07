@@ -22,4 +22,4 @@ After that, for Visual Studio 2022 run the cmak_build.bat and now the solution c
 
 Offsets won't be updated frequently.
 
-Updated offsets can be found here: https://github.com/a2x/cs2-dumper/tree/main/output
+To update the offsets simply download the "offsets.json", "client_dll.json" and "buttons.json" from https://github.com/a2x/cs2-dumper/tree/main/output and overwrite the files you have in your "Configuration" folder.
