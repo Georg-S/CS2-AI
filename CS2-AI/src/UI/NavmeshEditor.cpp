@@ -419,6 +419,7 @@ void NavmeshEditor::load_nodes(const json& navmesh_json)
 
 void NavmeshEditor::load_edges(const json& navmesh_json)
 {
+	m_edges.clear();
 	if (!navmesh_json.contains("edges"))
 		return;
 
