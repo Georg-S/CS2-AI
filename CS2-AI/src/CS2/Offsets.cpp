@@ -42,8 +42,7 @@ std::optional<Offsets> load_offsets_from_files()
 		offsets.force_left = static_cast<uintptr_t>(buttons_offsets_json["client.dll"]["left"]);
 		offsets.force_right = static_cast<uintptr_t>(buttons_offsets_json["client.dll"]["right"]);
 
-		offsets.crosshair_offset = static_cast<uintptr_t>(client_offsets_json["client.dll"]["classes"]["C_CSPlayerPawnBase"]["fields"]["m_iIDEntIndex"]);
-
+		offsets.crosshair_offset = static_cast<uintptr_t>(client_offsets_json["client.dll"]["classes"]["C_CSPlayerPawn"]["fields"]["m_iIDEntIndex"]);
 		//offsets.current_map = (DWORD)offsets_json["signatures"]["dwClientState_Map"];
 	}
 	catch (std::exception const& e)

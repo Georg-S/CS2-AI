@@ -1,5 +1,7 @@
 #include "CS2/MovementStrategy.h"
 
+#include <filesystem>
+
 void MovementStrategy::update(GameInformationhandler* game_info_handler)
 {
 	const GameInformation game_info = game_info_handler->get_game_information();
@@ -65,19 +67,24 @@ void MovementStrategy::handle_navmesh_load(const std::string& map_name)
 	if (map_name == m_loaded_map)
 		return;
 
-	if (map_name == "")
-	{
-		m_loaded_map = "";
-		m_valid_navmesh_loaded = false;
+	// <empty> seems to be the "name" it has probably since CS2 if no map is loaded
+	if (map_name == "" || map_name == "<empty>")
 		return;
-	}
 
 	m_loaded_map = map_name;
 
 	std::string processed_map_name = m_loaded_map;
 	std::replace(processed_map_name.begin(), processed_map_name.end(), '/', '_');
 
-	std::string file_path = "Navmesh/json/" + processed_map_name + ".json";
+	std::string file_name = processed_map_name + ".json";
+	std::string file_path = "Navmesh/json/" + file_name;
+	if (!std::filesystem::is_regular_file(file_path)) 
+	{
+		m_valid_navmesh_loaded = false;
+		Logging::log_error("No navmesh named " + file_name + " found");
+		return;
+	}
+
 	if (load_in_navmesh(file_path))
 		m_valid_navmesh_loaded = true;
 }
