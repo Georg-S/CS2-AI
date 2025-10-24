@@ -219,7 +219,7 @@ uintptr_t GameInformationhandler::get_list_entity(uintptr_t id, uintptr_t entity
 uintptr_t GameInformationhandler::get_entity_controller_or_pawn(uintptr_t list_entity, uintptr_t id)
 {
 	// Bit magic to get the controller or pawn, even if a pointer was given instead of an ID
-	return m_process_memory.read_memory<uintptr_t>(list_entity + (id & 0x1FF) * 0x78);
+	return m_process_memory.read_memory<uintptr_t>(list_entity + (id & 0x1FF) * 0x70);
 }
 
 std::optional<PlayerInformation> GameInformationhandler::read_player(uintptr_t entity_list_begin, uintptr_t id, uintptr_t player_address)
