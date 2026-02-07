@@ -42,7 +42,7 @@ struct GameInformation
 	std::vector<PlayerInformation> other_players;
 	std::optional<PlayerInformation> player_in_crosshair;
 	std::optional<PlayerInformation> closest_target_player; // Can be in the same team, or enemy team only
-	char current_map[64] = "";
+	std::string current_map = "";
 };
 
 class GameInformationhandler
@@ -70,7 +70,7 @@ private:
 	std::optional<PlayerInformation> read_player(uintptr_t entity_list_begin, uintptr_t id, uintptr_t player_address);
 	std::optional<PlayerInformation> read_player_in_crosshair(uintptr_t player_controller, uintptr_t player_pawn);
 	std::optional<PlayerInformation> get_closest_player(const GameInformation& game_info, bool only_enemy_team);
-	void read_in_current_map(char* buffer, size_t buffer_size);
+	std::string read_in_current_map();
 	bool read_in_if_controlled_player_is_shooting();
 
 	bool m_attached_to_process = false;

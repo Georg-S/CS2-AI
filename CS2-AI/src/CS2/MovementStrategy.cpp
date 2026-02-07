@@ -7,7 +7,7 @@ void MovementStrategy::update(GameInformationhandler* game_info_handler)
 	const GameInformation game_info = game_info_handler->get_game_information();
 	const auto current_time_ms = get_current_time_in_ms();
 
-	handle_navmesh_load(std::string(game_info.current_map));
+	handle_navmesh_load(game_info.current_map);
 
 	if (!m_valid_navmesh_loaded)
 		return;

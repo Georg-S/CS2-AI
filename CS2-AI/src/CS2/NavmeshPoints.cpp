@@ -31,7 +31,7 @@ void NavmeshPoints::add_point()
 
 	if (m_map_name == "") 
 	{
-		m_map_name = std::string(game_info.current_map);
+		m_map_name = game_info.current_map;
 		std::replace(m_map_name.begin(), m_map_name.end(), '/', '_');
 	}
 

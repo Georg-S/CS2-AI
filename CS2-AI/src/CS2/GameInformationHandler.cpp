@@ -3,6 +3,7 @@
 #include <chrono>
 
 #include "Utility/Logging.h"
+#include "Utility/Utility.h"
 #include "CS2/Constants.h"
 
 bool GameInformationhandler::init(const Config& config)
@@ -34,7 +35,7 @@ void GameInformationhandler::update_game_information()
 	m_game_information.player_in_crosshair = read_player_in_crosshair(player_controller_address, player_pawn_address);
 	m_game_information.other_players = read_other_players(player_controller_address);
 	m_game_information.closest_target_player = get_closest_player(m_game_information, m_config.ignore_same_team);
-	read_in_current_map(m_game_information.current_map, std::size(m_game_information.current_map));
+	m_game_information.current_map = read_in_current_map();
 }
 
 GameInformation GameInformationhandler::get_game_information() const
@@ -122,14 +123,20 @@ std::optional<PlayerInformation> GameInformationhandler::get_closest_player(cons
 	return closest_enemy;
 }
 
-void GameInformationhandler::read_in_current_map(char* buffer, size_t buffer_size)
+std::string GameInformationhandler::read_in_current_map()
 {
 	constexpr uintptr_t global_var_map = 0x180;
+	const auto global_vars = m_process_memory.read_memory<uintptr_t>(m_client_dll_address + m_offsets.global_vars);
+	const auto map_path_ptr = m_process_memory.read_memory<uintptr_t>(global_vars + global_var_map);
 
-	auto global_vars = m_process_memory.read_memory<uintptr_t>(m_client_dll_address + m_offsets.global_vars);
-	auto map_name_ptr = m_process_memory.read_memory<uintptr_t>(global_vars + global_var_map);
-
-	m_process_memory.read_string_from_memory(map_name_ptr, buffer, buffer_size);
+	char name_buffer[64] = "";
+	m_process_memory.read_string_from_memory(map_path_ptr, name_buffer, std::size(name_buffer));
+	if (name_buffer[0])
+	{
+		// Now a map/file path is returned instead of just the map name, we only want the map name
+		return get_filename(name_buffer);
+	}
+	return "";
 }
 
 bool GameInformationhandler::read_in_if_controlled_player_is_shooting()
