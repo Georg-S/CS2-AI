@@ -106,10 +106,9 @@ source_group("\\Source Files" FILES "src/main.cpp")
 source_group("Other" REGULAR_EXPRESSION "\\.h$|\\.cpp$|\\.stamp$|\\.rule$")
 
 
-add_executable(CS2_AI "src/main.cpp" ${SOURCES} ${HEADERS} ${QT_UI_FILES})
+add_executable(CS2_AI WIN32 "src/main.cpp" ${SOURCES} ${HEADERS} ${QT_UI_FILES})
 target_include_directories(CS2_AI PUBLIC "include")
 set_target_properties(CS2_AI PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
-set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CS2_AI)
 target_link_libraries(CS2_AI Qt6::Widgets)
 
 add_custom_command(TARGET CS2_AI 
