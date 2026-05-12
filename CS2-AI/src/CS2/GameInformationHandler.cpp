@@ -207,7 +207,7 @@ Movement GameInformationhandler::read_controlled_player_movement(uintptr_t playe
 Vec3D<float> GameInformationhandler::get_head_bone_position(uintptr_t player_pawn)
 {
 	constexpr DWORD bone_matrix_offset = 0x80;
-	constexpr DWORD head_bone_index = 0x6;
+	constexpr DWORD head_bone_index = 0x7;
 	constexpr DWORD matrix_size = 0x20;
 
 	auto game_scene_node = m_process_memory.read_memory<uintptr_t>(player_pawn + m_offsets.sceneNode);
